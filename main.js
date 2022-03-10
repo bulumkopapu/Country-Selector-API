@@ -73,16 +73,28 @@ async function fetchProvince(tokenItem, country){
 }  
 
 //This calls the fetch auth token async function then passes the auth token to the calling of fetch country
-fetchAuthToken().then(token => {
-    fetchCountry(token);
+fetchAuthToken().catch(error => {
+    console.log("Oooops! Something went wrong with fetching the auth token!! ");
+    console.error(error);
+}).then(token => {
+    fetchCountry(token).catch(error => {
+        console.log("Oooops! Something went wrong with fetching the country!! ");
+        console.error(error);
+    });;
 })
 
 
 //This waits for the country select box to change then it fetches the auth token then fetches the appropriate provinces
 countryDropdown.addEventListener('change', function(){
-    fetchAuthToken().then(token => {
+    fetchAuthToken().catch(error => {
+        console.log("Oooops! Something went wrong with fetching the auth token!! ");
+        console.error(error);
+    }).then(token => {
         const selectedCountry = countryDropdown[countryDropdown.selectedIndex].text;
-        fetchProvince(token, selectedCountry);
+        fetchProvince(token, selectedCountry).catch(error => {
+            console.log("Oooops! Something went wrong with fetching the provinces!! ");
+            console.error(error);
+        });
         provinceDropdown.options.length = 0;
         provinceDropdown.add(defaultOptionProvince);
     })
